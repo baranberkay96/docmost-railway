@@ -1,5 +1,7 @@
 # Deploy and Host Docmost with Railway
 
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/docmost-wiki-and-docs-postgres-redis-s3-?referralCode=20H68q)
+
 Docmost is an open-source collaborative wiki and documentation tool, an alternative to Confluence and Notion: spaces, nested pages, real-time co-editing, comments, page history, diagrams (Draw.io, Excalidraw, Mermaid) and permissions. This template runs Docmost with PostgreSQL 18, Redis and a Railway Bucket for files, with your workspace and owner account created on the first deploy.
 
 ## About Hosting Docmost
