@@ -1,0 +1,323 @@
+{
+  "name": "Docmost Wiki and Docs (Postgres, Redis, S3 Bucket)",
+  "idSeed": "Docmost Wiki and Docs (Postgres, Redis, S3 Bucket)",
+  "description": "Real-time collaborative wiki with spaces; owner preset, files in Bucket.",
+  "category": "Other",
+  "tags": [
+    "docmost",
+    "wiki",
+    "documentation",
+    "confluence-alternative",
+    "notion-alternative",
+    "postgres",
+    "redis",
+    "self-hosted"
+  ],
+  "image": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/docmost.png",
+  "upstream": {
+    "repo": "docmost/docmost",
+    "version": "0.98.0",
+    "license": "AGPL-3.0 (core); apps/*/src/ee under the Docmost Enterprise license, inactive without a key",
+    "images": {
+      "docmost": "docmost/docmost:0.98.0@sha256:c3bdc84767de0fc9431763523636ddfd783c35c25ef7d4a3c95c064628e78d7a (released 2026-11-20)",
+      "postgres": "ghcr.io/railwayapp-templates/postgres-ssl:18.6@sha256:4fc833b43d2aaf6ecc9b18615f5533602b723a32d0e2efe2dae8ca0f7217c863",
+      "redis": "redis:8.2.11@sha256:b0b01167ff47bc3868e56a967895a26be4230891a1f42a78ab61cdd227accc8d"
+    },
+    "checked": "2026-11-24"
+  },
+  "services": {
+    "Docmost": {
+      "icon": "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/docmost.png",
+      "source": {
+        "repo": "baranberkay96/docmost-railway",
+        "rootDirectory": "/services/docmost"
+      },
+      "startCommand": null,
+      "preDeployCommand": "node /app/railway/predeploy.mjs",
+      "preDeployTimeoutSeconds": 1500,
+      "healthcheckPath": "/api/health",
+      "healthcheckTimeout": 600,
+      "restartPolicyType": "ALWAYS",
+      "numReplicas": 1,
+      "cronSchedule": null,
+      "publicDomain": true,
+      "targetPort": 3000,
+      "tcpProxy": null,
+      "volume": null,
+      "variables": {
+        "PORT": {
+          "defaultValue": "3000",
+          "description": "Port Docmost listens on.",
+          "required": false
+        },
+        "APP_URL": {
+          "defaultValue": "https://${{RAILWAY_PUBLIC_DOMAIN}}",
+          "description": "Public URL of Docmost. Change it when you add a custom domain.",
+          "required": false
+        },
+        "APP_SECRET": {
+          "defaultValue": "${{secret(64, \"abcdef0123456789\")}}",
+          "description": "Signs sessions and tokens (32+ characters). Changing it logs everyone out.",
+          "required": false
+        },
+        "DATABASE_URL": {
+          "defaultValue": "postgresql://${{Postgres.POSTGRES_USER}}:${{Postgres.POSTGRES_PASSWORD}}@${{Postgres.RAILWAY_PRIVATE_DOMAIN}}:5432/${{Postgres.POSTGRES_DB}}",
+          "description": "Postgres on the private network.",
+          "required": false
+        },
+        "REDIS_URL": {
+          "defaultValue": "${{Redis.REDIS_URL}}",
+          "description": "Redis for real-time collaboration, queues and caching.",
+          "required": false
+        },
+        "STORAGE_DRIVER": {
+          "defaultValue": "s3",
+          "description": "Store attachments in the Railway Bucket.",
+          "required": false
+        },
+        "AWS_S3_BUCKET": {
+          "defaultValue": "${{Bucket.BUCKET}}",
+          "description": "Bucket name.",
+          "required": false
+        },
+        "AWS_S3_ENDPOINT": {
+          "defaultValue": "${{Bucket.ENDPOINT}}",
+          "description": "Bucket endpoint.",
+          "required": false
+        },
+        "AWS_S3_REGION": {
+          "defaultValue": "${{Bucket.REGION}}",
+          "description": "Bucket region.",
+          "required": false
+        },
+        "AWS_S3_ACCESS_KEY_ID": {
+          "defaultValue": "${{Bucket.ACCESS_KEY_ID}}",
+          "description": "Bucket access key.",
+          "required": false
+        },
+        "AWS_S3_SECRET_ACCESS_KEY": {
+          "defaultValue": "${{Bucket.SECRET_ACCESS_KEY}}",
+          "description": "Bucket secret key.",
+          "required": false
+        },
+        "AWS_S3_FORCE_PATH_STYLE": {
+          "defaultValue": "false",
+          "description": "Railway Buckets use virtual-hosted-style URLs.",
+          "required": false
+        },
+        "FILE_UPLOAD_SIZE_LIMIT": {
+          "defaultValue": "50mb",
+          "description": "Largest upload.",
+          "required": false
+        },
+        "DOCMOST_ADMIN_EMAIL": {
+          "defaultValue": "admin@example.com",
+          "description": "Owner login e-mail, created on the first deploy. Use your own address.",
+          "required": false
+        },
+        "DOCMOST_ADMIN_PASSWORD": {
+          "defaultValue": "${{secret(24, \"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\")}}",
+          "description": "Owner password (12-70 characters), used on the first deploy only; change it later in Account settings.",
+          "required": false
+        },
+        "DOCMOST_ADMIN_NAME": {
+          "defaultValue": "Admin",
+          "description": "Owner display name.",
+          "required": false
+        },
+        "DOCMOST_WORKSPACE_NAME": {
+          "defaultValue": "Docmost",
+          "description": "Name of the workspace created on the first deploy.",
+          "required": false
+        },
+        "MAIL_DRIVER": {
+          "defaultValue": "smtp",
+          "description": "smtp or postmark. Postmark works on every Railway plan (HTTP API); SMTP needs Pro.",
+          "required": false
+        },
+        "MAIL_FROM_ADDRESS": {
+          "defaultValue": "noreply@example.com",
+          "description": "Sender address for invitations and password resets.",
+          "required": false
+        },
+        "MAIL_FROM_NAME": {
+          "defaultValue": "Docmost",
+          "description": "Sender name.",
+          "required": false
+        },
+        "SMTP_HOST": {
+          "defaultValue": "",
+          "description": "Optional SMTP host.",
+          "required": false
+        },
+        "SMTP_PORT": {
+          "defaultValue": "587",
+          "description": "SMTP port.",
+          "required": false
+        },
+        "SMTP_USERNAME": {
+          "defaultValue": "",
+          "description": "Optional SMTP user name.",
+          "required": false
+        },
+        "SMTP_PASSWORD": {
+          "defaultValue": "",
+          "description": "Optional SMTP password.",
+          "required": false
+        },
+        "POSTMARK_TOKEN": {
+          "defaultValue": "",
+          "description": "Optional Postmark server token (with MAIL_DRIVER=postmark).",
+          "required": false
+        },
+        "DISABLE_TELEMETRY": {
+          "defaultValue": "true",
+          "description": "Turn off anonymous usage telemetry.",
+          "required": false
+        },
+        "RAILWAY_DEPLOYMENT_DRAINING_SECONDS": {
+          "defaultValue": "30",
+          "description": "Grace period for open requests on redeploy.",
+          "required": false
+        }
+      }
+    },
+    "Postgres": {
+      "icon": "https://devicons.railway.app/i/postgresql.svg",
+      "source": {
+        "image": "ghcr.io/railwayapp-templates/postgres-ssl:18.6@sha256:4fc833b43d2aaf6ecc9b18615f5533602b723a32d0e2efe2dae8ca0f7217c863"
+      },
+      "startCommand": null,
+      "preDeployCommand": null,
+      "healthcheckPath": null,
+      "healthcheckTimeout": null,
+      "restartPolicyType": "ON_FAILURE",
+      "restartPolicyMaxRetries": 10,
+      "numReplicas": 1,
+      "cronSchedule": null,
+      "publicDomain": false,
+      "targetPort": null,
+      "tcpProxy": null,
+      "volume": {
+        "mountPath": "/var/lib/postgresql/data"
+      },
+      "variables": {
+        "PGDATA": {
+          "defaultValue": "/var/lib/postgresql/data/pgdata",
+          "description": "Location where the database will be initialized",
+          "required": false
+        },
+        "PGHOST": {
+          "defaultValue": "${{RAILWAY_PRIVATE_DOMAIN}}",
+          "description": "Railway Private Domain Name.",
+          "required": false
+        },
+        "PGPORT": {
+          "defaultValue": "5432",
+          "description": "Port to connect to Postgres.",
+          "required": false
+        },
+        "PGUSER": {
+          "defaultValue": "${{ POSTGRES_USER }}",
+          "description": "Required variable for Data panel",
+          "required": false
+        },
+        "PGDATABASE": {
+          "defaultValue": "${{POSTGRES_DB}}",
+          "description": "Required variable for the data panel.",
+          "required": false
+        },
+        "PGPASSWORD": {
+          "defaultValue": "${{POSTGRES_PASSWORD}}",
+          "description": "Required variable for Data panel",
+          "required": false
+        },
+        "POSTGRES_DB": {
+          "defaultValue": "railway",
+          "description": "Default database created when image is started.",
+          "required": false
+        },
+        "DATABASE_URL": {
+          "defaultValue": "postgresql://${{PGUSER}}:${{POSTGRES_PASSWORD}}@${{RAILWAY_PRIVATE_DOMAIN}}:5432/${{PGDATABASE}}",
+          "description": "Private connection URL (Docmost uses its own DATABASE_URL).",
+          "required": false
+        },
+        "POSTGRES_USER": {
+          "defaultValue": "postgres",
+          "description": "User to connect to Postgres DB",
+          "required": false
+        },
+        "SSL_CERT_DAYS": {
+          "defaultValue": "820",
+          "description": "SSL certificate expiry in days.",
+          "required": false
+        },
+        "POSTGRES_PASSWORD": {
+          "defaultValue": "${{ secret(32, \"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\") }}",
+          "description": "Password to connect to DB",
+          "required": false
+        },
+        "RAILWAY_DEPLOYMENT_DRAINING_SECONDS": {
+          "defaultValue": "60",
+          "description": "Allow Postgres to cleanly shut down",
+          "required": false
+        }
+      }
+    },
+    "Redis": {
+      "icon": "https://cdn.sanity.io/images/sy1jschh/production/0ce0bfdcfbdbf69662b1116671f97c2dd788b655-157x157.svg",
+      "source": {
+        "image": "redis:8.2.11@sha256:b0b01167ff47bc3868e56a967895a26be4230891a1f42a78ab61cdd227accc8d"
+      },
+      "startCommand": "/bin/sh -c \"rm -rf $RAILWAY_VOLUME_MOUNT_PATH/lost+found/ && exec docker-entrypoint.sh redis-server --requirepass $REDIS_PASSWORD --save 60 1 --dir $RAILWAY_VOLUME_MOUNT_PATH\"",
+      "preDeployCommand": null,
+      "healthcheckPath": null,
+      "healthcheckTimeout": null,
+      "restartPolicyType": "ON_FAILURE",
+      "restartPolicyMaxRetries": 10,
+      "numReplicas": 1,
+      "cronSchedule": null,
+      "publicDomain": false,
+      "targetPort": null,
+      "tcpProxy": null,
+      "volume": {
+        "mountPath": "/data"
+      },
+      "variables": {
+        "REDISHOST": {
+          "defaultValue": "${{RAILWAY_PRIVATE_DOMAIN}}",
+          "description": "Private network hostname of the Redis service.",
+          "required": false
+        },
+        "REDISPORT": {
+          "defaultValue": "6379",
+          "description": "Port that Redis listens on.",
+          "required": false
+        },
+        "REDISUSER": {
+          "defaultValue": "default",
+          "description": "Username for authenticating with Redis.",
+          "required": false
+        },
+        "REDIS_PASSWORD": {
+          "defaultValue": "${{ secret(32, \"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\") }}",
+          "description": "Randomly generated password for authenticating with Redis.",
+          "required": false
+        },
+        "REDISPASSWORD": {
+          "defaultValue": "${{REDIS_PASSWORD}}",
+          "description": "Alias of REDIS_PASSWORD.",
+          "required": false
+        },
+        "REDIS_URL": {
+          "defaultValue": "redis://${{ REDISUSER }}:${{ REDIS_PASSWORD }}@${{ REDISHOST }}:${{ REDISPORT }}",
+          "description": "Private connection URL used by Docmost.",
+          "required": false
+        }
+      }
+    }
+  },
+  "buckets": [
+    "Bucket"
+  ]
+}
