@@ -28,7 +28,7 @@ Attachments go to a private Railway Bucket through Docmost's S3 driver, so the D
 ### Deployment Dependencies
 
 - Docmost source: https://github.com/docmost/docmost
-- Self-hosting docs: https://docmost.com/docs/self-hosting/overview
+- Self-hosting docs: https://docmost.com/docs/installation
 - Environment variables: https://docmost.com/docs/self-hosting/environment-variables
 - Railway Buckets: https://docs.railway.com/guides/storage-buckets
 
