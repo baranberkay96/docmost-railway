@@ -53,7 +53,7 @@ Attachments go to a private Railway Bucket through Docmost's S3 driver, so the D
 
 **Scaling and versions.** Run one Docmost replica (real-time collaboration state is coordinated through Redis, but upstream documents a single instance). The image is pinned by digest in `services/docmost/Dockerfile`. To upgrade, change the tag and digest, back up Postgres and redeploy; migrations run automatically on start.
 
-**Resources.** About 0.3–0.4 GB RAM idle in total (Docmost ~0.25 GB, Postgres and Redis under 0.1 GB each), roughly $4 per month plus Bucket storage. Runs on the Trial plan.
+**Resources.** Measured idle on Railway: Docmost 0.28 GB, Postgres 0.06–0.12 GB, Redis 0.05 GB; about 0.4–0.45 GB in total, roughly $4–5 per month plus Bucket storage. Runs on the Trial plan.
 
 **License.** Docmost's core is AGPL-3.0. Enterprise features in the `ee` folders need a commercial license key and stay inactive without one. This is a community template, not affiliated with Docmost.
 

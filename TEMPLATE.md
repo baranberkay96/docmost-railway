@@ -42,12 +42,23 @@ Version label: Docmost is 0.x (0.98.0), so the listing carries no version.
 
 ## Resources
 
-See the round-13 report for measured values.
+Measured on Railway (2026-11-24, idle after login, a page, a search and an upload):
+
+| Service | Idle RAM | CPU idle |
+|---|---|---|
+| Docmost | 0.28 GB | < 0.01 vCPU |
+| Postgres | 0.06–0.12 GB | < 0.01 |
+| Redis | 0.05 GB | < 0.01 |
+
+Total ≈ 0.4–0.45 GB → ≈ $4–5/month idle RAM plus Bucket storage. Fits Trial's 1 GB per service.
 
 ## Verification checklist
 
-- [ ] Pre-deploy log `workspace 'Docmost' created`; all services SUCCESS.
-- [ ] Stranger setup refused (403); owner login; page create; search; upload to the Bucket and download.
+- [x] Pre-deploy log `Postgres reachable`, `Redis reachable`, `workspace 'Docmost' created; owner admin@example.com`; all services SUCCESS, `/api/health` 200.
+- [x] Stranger `POST /api/auth/setup` → 403 "Workspace setup already completed."
+- [x] Owner login (cookie `authToken`), role owner, space "General"; page create; search finds it.
+- [x] Upload (`/api/files/upload`) stored under the workspace prefix in the Bucket and downloaded byte-identical through Docmost.
+- [x] `DOCMOST_ADMIN_PASSWORD=abc` on an existing workspace: redeploy SUCCESS (the value is only used on a fresh database, where it would be replaced by a locked random password).
 
 ## Open questions
 
